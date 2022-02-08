@@ -2,6 +2,8 @@ package com.bilgeadam.odevpersonelapp.controller;
 
 import com.bilgeadam.odevpersonelapp.Exception.PersonelNotFoundException;
 import com.bilgeadam.odevpersonelapp.entity.Personel;
+import com.bilgeadam.odevpersonelapp.pojo.Bolum;
+import com.bilgeadam.odevpersonelapp.pojo.Sehir;
 import com.bilgeadam.odevpersonelapp.repository.PersonelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,21 +49,34 @@ public class PersonelController {
     {
         Personel personel = getKisi(id);
 
-        String bolumAd = getBolumAd(personel.getNo());
+        Bolum bolum = getBolum(personel.getBolumNo());
 
-        return personel.getAd()+ " " +personel.getSoyad()+ " " + bolumAd;
+        Sehir sehir = getSehir(bolum.getSehirNo());
+
+        return personel.getAd()+ " " +personel.getSoyad()+ " " + bolum.getAd()+" "+sehir.getAd();
 
 
     }
-    private String getBolumAd(long id)
+    private Bolum getBolum(long bolumNo)
     {
 
         String bolmuURL = "http://localhost:8230";
         RestTemplate restTemplate = new RestTemplate();
 
-        String bolumAd = restTemplate.getForObject(bolmuURL+"/bolum/" + id, String.class);
+        Bolum bolumAd = restTemplate.getForObject(bolmuURL+"/bolum/" + bolumNo, Bolum.class);
 
         return bolumAd;
+    }
+
+    private Sehir getSehir(long sehirNo)
+    {
+
+        String sehirURL = "http://localhost:8240";
+        RestTemplate restTemplate = new RestTemplate();
+
+        Sehir sehir = restTemplate.getForObject(sehirURL+"/bolum/" + sehirNo, Sehir.class);
+
+        return sehir;
     }
 
 
